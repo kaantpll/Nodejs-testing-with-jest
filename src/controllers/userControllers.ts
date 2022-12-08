@@ -5,7 +5,8 @@ import jwt from 'jsonwebtoken'
 import { UserNotFound } from '../errors/userNotFound'
 import bcrypt from 'bcrypt'
 import { PasswordNotHashed } from '../errors/passwordNotValid'
-import { Constants } from '../constants'
+import { USER_ALREADY_EXIST, USER_GET_LIST, USER_LOGIN_SUCCESS, USER_NOT_FOUND, USER_REGISTER_SUCCESS } from '../constants'
+
 
 const register= async(req:Request,res:Response)=>{
 
@@ -14,7 +15,7 @@ const register= async(req:Request,res:Response)=>{
     const isUserExist =await User.findOne({email})
 
     if(isUserExist){
-        throw new BadRequest(Constants.USER_ALREADY_EXIST)
+        throw new BadRequest(USER_ALREADY_EXIST)
     }
 
     const user = User.build({email,password,username,age,firstname})
@@ -26,7 +27,7 @@ const register= async(req:Request,res:Response)=>{
         jwt: jwtToken
     }
     
-    res.status(201).json({message:Constants.USER_REGISTER_SUCCESS,data:{email,username,token:jwtToken}})
+    res.status(201).json({message:USER_REGISTER_SUCCESS,data:{email,username,token:jwtToken}})
 }
 
 const login = async(req:Request,res:Response)=>{
@@ -35,7 +36,7 @@ const login = async(req:Request,res:Response)=>{
     const user =await User.findOne({email})
 
     if(!user){
-        throw new UserNotFound(Constants.USER_NOT_FOUND)
+        throw new UserNotFound(USER_NOT_FOUND)
     }
 
     const comparedPassword = await bcrypt.compare(password.toString(),user.password)
@@ -50,14 +51,14 @@ const login = async(req:Request,res:Response)=>{
         jwt: jwtToken
     }
 
-    res.status(200).json({message:Constants.USER_LOGIN_SUCCESS});
+    res.status(200).json({message:USER_LOGIN_SUCCESS});
 }
 
 const getUsers= async(req:Request,res:Response)=>{
   
     const userList =await User.find();
     
-    res.status(200).json({message:Constants.USER_GET_LIST,data:userList})
+    res.status(200).json({message:USER_GET_LIST,data:userList})
 }
 
 export {
