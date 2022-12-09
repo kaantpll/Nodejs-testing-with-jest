@@ -2,7 +2,7 @@ import request  from 'supertest'
 import mongoose from 'mongoose'
 import dotenv from 'dotenv'
 import {app} from '../../index'
-import { USER_ALREADY_EXIST, USER_GET_LIST, USER_LOGIN_SUCCESS, USER_NOT_AUTH, USER_REGISTER_SUCCESS } from '../../constants'
+import { Constants } from '../../constants'
 import { BadRequest } from '../../errors/badRequestError'
 import { register } from '../../controllers/userControllers'
 import { ObjectId } from 'mongodb'
@@ -50,7 +50,7 @@ describe('User tests',()=>{
         const res =  await request(app).get("/api/v1/users")
 
             expect(res.statusCode).toBe(401);
-            expect(res.body.errors).toBe(USER_NOT_AUTH)
+            expect(res.body.errors).toBe(Constants.USER_NOT_AUTH)
        
     }),
 
@@ -59,7 +59,7 @@ describe('User tests',()=>{
         .get("/api/v1/users")
         .set('Authorization', 'TokenKey') 
         expect(res.statusCode).toBe(200)
-        expect(res.body.message).toBe(USER_GET_LIST)
+        expect(res.body.message).toBe(Constants.USER_GET_LIST)
     })
 
     it('POST/users/login whenUserLoginRequestMethod_itShouldReturnLoginSuccessMessageWith_200_StatusCode',async()=>{
@@ -70,7 +70,7 @@ describe('User tests',()=>{
        .send(fakeUser)
        
        expect(res.statusCode).toBe(200);
-       expect(res.body.message).toBe(USER_LOGIN_SUCCESS)
+       expect(res.body.message).toBe(Constants.USER_LOGIN_SUCCESS)
     })
 
     it('POST/users/register whenUserRequestRegisterMethod_itShouldReturnSuccessRegisterMessageWith_201_StatusCode',async()=>{
@@ -87,11 +87,11 @@ describe('User tests',()=>{
         })
     
         expect(res.statusCode).toBe(201);
-        expect(res.body.message).toBe(USER_REGISTER_SUCCESS)
+        expect(res.body.message).toBe(Constants.USER_REGISTER_SUCCESS)
       
      })
      it('POST/users/register whenUserRequestRegisterMethodWithValidBody_itShouldThrowErrorMessageWithBy_400_StatusCode',async()=>
      {
-      await expect(()=>register(mockRequest,mockResponse)).rejects.toThrow(new BadRequest(USER_ALREADY_EXIST))
+      await expect(()=>register(mockRequest,mockResponse)).rejects.toThrow(new BadRequest(Constants.USER_ALREADY_EXIST))
      })
 })

@@ -2,7 +2,7 @@ import request  from 'supertest'
 import mongoose from 'mongoose'
 import dotenv from 'dotenv'
 import {app} from '../../index'
-import { PRODUCT_CREATED, PRODUCT_DELETED, PRODUCT_LISTED, PRODUCT_LISTED_BY_ID, PRODUCT_NOT_FOUND, PRODUCT_UPDATED } from '../../constants'
+import { Constants } from '../../constants'
 import { getOneProductWithProductId} from '../../controllers/productControllers'
 import { BadRequest } from '../../errors/badRequestError'
 import {Request,Response} from 'express'
@@ -46,11 +46,11 @@ describe('Product controller tests',()=>{
         const res =  await request(app).get("/api/v1/products")
 
         expect(res.statusCode).toBe(200);
-        expect(res.body.message).toBe(PRODUCT_LISTED)
+        expect(res.body.message).toBe(Constants.PRODUCT_LISTED)
     }),
 
     it('GET/products/:id whenGetProductListRequestMethod_itShouldThrowProductNotFound_400_StatusCode',async()=>{
-     await expect(()=>getOneProductWithProductId(mockRequest,mockResponse)).rejects.toThrow(new BadRequest(PRODUCT_NOT_FOUND))
+     await expect(()=>getOneProductWithProductId(mockRequest,mockResponse)).rejects.toThrow(new BadRequest(Constants.PRODUCT_NOT_FOUND))
 
     })
 
@@ -58,7 +58,7 @@ describe('Product controller tests',()=>{
        const res= await request(app).get("/api/v1/products/"+productId)
 
        expect(res.statusCode).toBe(200) 
-       expect(res.body.message).toBe(PRODUCT_LISTED_BY_ID)
+       expect(res.body.message).toBe(Constants.PRODUCT_LISTED_BY_ID)
     })
 
     it('POST/prdoucts givenProductData_whenCreateANewProduct_itShouldReturnProductMessageAndOwnOfProductWith_201_StatusCode',async()=>{
@@ -69,7 +69,7 @@ describe('Product controller tests',()=>{
        .send(fakeProduct)
        
        expect(res.statusCode).toBe(201);
-       expect(res.body.message).toBe(PRODUCT_CREATED)
+       expect(res.body.message).toBe(Constants.PRODUCT_CREATED)
     })
 
     it("PUT/products/:id givenProductData_whenUpdateProductWithId_itShouldReturnProductUpdatedMessageWith_200_StatusCode",async()=>{
@@ -83,13 +83,13 @@ describe('Product controller tests',()=>{
         productStock:51})
 
         expect(res.statusCode).toBe(200);
-        expect(res.body.message).toBe(PRODUCT_UPDATED)
+        expect(res.body.message).toBe(Constants.PRODUCT_UPDATED)
     })
 
     it("DELETE/products/:id givenProductId_whenDeleteWithProductId_itShouldReturnProductDeletedMessageWith_200_StatusCode",async()=>{
         const res = await request(app).delete("/api/v1/products/"+productId)
         
         expect(res.statusCode).toBe(200)
-        expect(res.body.message).toBe(PRODUCT_DELETED)
+        expect(res.body.message).toBe(Constants.PRODUCT_DELETED)
     })
 })
